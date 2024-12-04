@@ -1,0 +1,8 @@
+uvicorn
+fastapi
+langchain
+FlagEmbedding
+langchain_openai
+ragas
+python-multipart
+openpyxl
