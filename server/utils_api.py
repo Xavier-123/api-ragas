@@ -1,11 +1,12 @@
 import os
-import uuid
-from fastapi.responses import JSONResponse, FileResponse, StreamingResponse
-from fastapi import FastAPI, UploadFile, File, Form, status, Body
+from fastapi.responses import JSONResponse
+from fastapi import UploadFile, File, status
 from tools.error_define import BinaryDecodingError
 from tools.configs import save_path
-from server.ragas_api import RequestModel
+from server.ragas_api import FileRequestModel
 from server.router import utils_router, ResponseModel
+
+
 
 '''上传文件'''
 
@@ -43,7 +44,7 @@ async def upload_file(
 
 @utils_router.post(path="/delete_file", summary="bytes", response_model=ResponseModel, tags=["上传文件"])
 async def delete_file(
-        req: RequestModel
+        req: FileRequestModel
 ):
     try:
         del_count = 0
@@ -83,7 +84,7 @@ async def delete_file(
 
 @utils_router.post(path="/retrieve_file", summary="bytes", response_model=ResponseModel, tags=["上传文件"])
 async def retrieve_file(
-        req: RequestModel
+        req: FileRequestModel
 ):
     try:
         '''查询账号下所有上传的文件'''

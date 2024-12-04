@@ -27,7 +27,26 @@ def update_task_dict(task_dict, thr_second=3600):
         pass
 
 
-class RequestModel(BaseModel):
+class FileRequestModel(BaseModel):
+    # 传文件参数
+    task_id: str = Field("", description="任务id")
+    user_id: str = Field("", description="用户id")
+    file_name: str = Field("", description="文件名")
+    update_file: bool = Field(True, description="只获取上传文件, False则获取结果文件")
+
+class OmegaRequestModel(BaseModel):
+    # omega相关参数
+    rag_url: str = Field("https://192.168.12.188:37778/api/v1/chat/completions", description="omega rag对话接口")
+    rag_authorization2: str = Field("", description="Authorization2")
+    rag_cookie: str = Field("", description="cookie")
+
+    # 其他参数
+    task_id: str = Field("", description="任务id")
+    user_id: str = Field("", description="用户id")
+    file_name: str = Field("", description="文件名")
+
+
+class RagasRequestModel(BaseModel):
     # LLm相关参数
     model: str = Field("qwen2-72b-instruct", example="")
     base_url: str = Field("http://120.222.7.146:1025/v1", example="")
@@ -37,11 +56,6 @@ class RequestModel(BaseModel):
                                             description="指定加载本地embedding模型,若使用此参数,embedding_openai_model_url和embedding_openai_model_name则无需使用")
     embedding_openai_model_url: str = Field("", examples=["http://120.222.7.146:18019/v1/embeddings"], description="远程embedding地址")
     embedding_openai_model_name: str = Field("", examples=["m3e-large"], description="远程embedding模型名称")
-
-    # omega相关参数
-    rag_url: str = Field("https://192.168.12.188:37778/api/v1/chat/completions", description="omega rag对话接口")
-    rag_authorization2: str = Field("", description="Authorization2")
-    rag_cookie: str = Field("", description="cookie")
 
     # ragas指标
     faithfulness: bool = Field(True, example=True, description="指标1 ‘忠实度’")
@@ -56,13 +70,13 @@ class RequestModel(BaseModel):
     task_id: str = Field("", description="任务id")
     user_id: str = Field("", description="用户id")
     file_name: str = Field("", description="文件名")
-    update_file: bool = Field(True, description="只获取上传文件")
 
 
 @ragas_router.post(path="/getOmegaRag", summary="bytes", response_model=ResponseModel,
                    tags=["RAGAs 评估"])
 async def getOmegaRag(
-        req: RequestModel,
+        # req: RequestModel,
+        req: OmegaRequestModel,
 ):
     '''通过omega获取answer和contexts'''
 
@@ -72,7 +86,7 @@ async def getOmegaRag(
 
     # 判断task_id是否存在
     if task_id in omega_task_dict or task_id in ragas_task_dict:
-        content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist", "res": {}}
+        content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in omega_task", "res": {}}
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
     filepath = os.path.join(save_path, f"{req.user_id}/ragas_{task_id}.json")
@@ -103,10 +117,17 @@ async def getOmegaRag(
 
 @ragas_router.post(path="/ragas_evaluate", summary="bytes", response_model=ResponseModel, tags=["RAGAs 评估"])
 async def ragas_evaluate(
-        req: RequestModel,
+        # req: RequestModel,
+        req: RagasRequestModel,
 ):
     '''通过 RAGAs 评估数据'''
     task_id = req.task_id
+
+    # 判断task_id是否存在
+    if task_id in omega_task_dict or task_id in ragas_task_dict:
+        content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in ragas_task", "res": {}}
+        return JSONResponse(status_code=status.HTTP_200_OK, content=content)
+
     data_samples, isComplete, error_info = ragas_load_data(req)
     if not isComplete:
         content = {"isSuc": True, "code": -1, "msg": str(error_info), "res": {}}
@@ -137,7 +158,7 @@ async def ragas_evaluate(
                    response_model=ResponseModel,
                    tags=["查询结果"])
 async def query_omega_evaluate(
-        req: RequestModel,
+        req: OmegaRequestModel,
 ):
     update_task_dict(omega_task_dict)
     omegaMsg, oemagaIsSuc, omeaga_task_code, file = queryOmegaDict(req, omega_task_dict)
@@ -154,7 +175,7 @@ async def query_omega_evaluate(
                    response_model=ResponseModel,
                    tags=["查询结果"])
 async def query_ragas_evaluate(
-        req: RequestModel,
+        req: RagasRequestModel,
 ):
     task_id = req.task_id
     update_task_dict(ragas_task_dict)
