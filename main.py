@@ -1,11 +1,11 @@
 import uvicorn
-from fastapi import FastAPI, UploadFile, File, Form, status, Body
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from server.router import utils_router, ragas_router
 from tools.error_define import CustomError
 from tools.log import logger
 
-app = FastAPI(title='ragas api', version='v1.0')
+app = FastAPI(title='ragas api', version='v1.0', docs_url=None)
 app.include_router(utils_router, prefix="/utils")
 app.include_router(ragas_router, prefix="/ragas")
 

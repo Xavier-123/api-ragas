@@ -2,7 +2,7 @@ import json
 import os
 from datasets import Dataset
 from fastapi.responses import JSONResponse, FileResponse
-from fastapi import FastAPI, UploadFile, File, Form, status, Body
+from fastapi import status
 from pydantic import BaseModel, Field
 import uuid
 from threading import Thread
@@ -28,14 +28,22 @@ def update_task_dict(task_dict, thr_second=3600):
 
 
 class RequestModel(BaseModel):
+    # LLm相关参数
     model: str = Field("qwen2-72b-instruct", example="")
     base_url: str = Field("http://120.222.7.146:1025/v1", example="")
-    embedding: str = Field("", description="指定embedding模型")
 
+    # embedding相关参数
+    embedding_local_model_path: str = Field("",
+                                            description="指定加载本地embedding模型,若使用此参数,embedding_openai_model_url和embedding_openai_model_name则无需使用")
+    embedding_openai_model_url: str = Field("", examples=["http://120.222.7.146:18019/v1/embeddings"], description="远程embedding地址")
+    embedding_openai_model_name: str = Field("", examples=["m3e-large"], description="远程embedding模型名称")
+
+    # omega相关参数
     rag_url: str = Field("https://192.168.12.188:37778/api/v1/chat/completions", description="omega rag对话接口")
     rag_authorization2: str = Field("", description="Authorization2")
     rag_cookie: str = Field("", description="cookie")
 
+    # ragas指标
     faithfulness: bool = Field(True, example=True, description="指标1 ‘忠实度’")
     context_recall: bool = Field(True, example=True, description="指标2 ‘上下文召回率’")
     context_precision: bool = Field(True, example=True, description="指标3 ‘上下文精度’")
@@ -44,6 +52,7 @@ class RequestModel(BaseModel):
     answer_similarity: bool = Field(False, example=False, description="指标6")
     context_entity_recall: bool = Field(False, example=True, description="指标7 ‘上下文相关性’")
 
+    # 其他参数
     task_id: str = Field("", description="任务id")
     user_id: str = Field("", description="用户id")
     file_name: str = Field("", description="文件名")

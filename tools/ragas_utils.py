@@ -1,17 +1,15 @@
 import pandas as pd
 import requests
 import json
-import random
-import uuid
 import time
-import datetime
 from langchain_openai.chat_models import ChatOpenAI
 from fastapi.responses import FileResponse
 from fastapi import status
 
-from tools.omega_rag_request import omega_rag_request_obj, get_nanoid, get_request_param
+from tools.omega_rag_request import get_request_param
 from tools.log import logger
 from tools.configs import *
+from tools.embedding import LocalEmbedding, OpenAIEmbedding
 
 from ragas.metrics import faithfulness, context_recall, context_precision, answer_relevancy, answer_correctness, \
     answer_similarity, context_entity_recall
@@ -179,27 +177,42 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
         if req.answer_relevancy:
             answer_relevancy.llm = my_llm  # 上下文相关性
             # 替换模型embedding模型
-            if req.embedding != "":
-                embedding_model = MyEmbedding(req.embedding)
+            if req.embedding_local_model_path != "":
+                logger.info(f"load local embedding model {req.embedding_local_model_path}")
+                embedding_model = LocalEmbedding(req.embedding_local_model_path)
+            elif req.embedding_openai_model_url != "" and req.embedding_openai_model_url != "":
+                logger.info(f"load remote embedding model {req.embedding_openai_model_name}")
+                embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
+                logger.info(f"load base embedding model {base_embedding}")
                 embedding_model = base_embedding
             answer_relevancy.embeddings = embedding_model  # 答案相关性
             metrics.append(answer_relevancy)
         if req.answer_correctness:
             answer_correctness.llm = my_llm
             # 替换模型embedding模型
-            if req.embedding != "":
-                embedding_model = MyEmbedding(req.embedding)
+            if req.embedding_local_model_path != "":
+                logger.info(f"load local embedding model {req.embedding_local_model_path}")
+                embedding_model = LocalEmbedding(req.embedding_local_model_path)
+            elif req.embedding_openai_model_url != "" and req.embedding_openai_model_url != "":
+                logger.info(f"load remote embedding model {req.embedding_openai_model_name}")
+                embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
+                logger.info(f"load base embedding model {base_embedding}")
                 embedding_model = base_embedding
             answer_correctness.embeddings = embedding_model
             metrics.append(answer_correctness)
         if req.answer_similarity:
             answer_similarity.llm = my_llm
             # 替换模型embedding模型
-            if req.embedding != "":
-                embedding_model = MyEmbedding(req.embedding)
+            if req.embedding_local_model_path != "":
+                logger.info(f"load local embedding model {req.embedding_local_model_path}")
+                embedding_model = LocalEmbedding(req.embedding_local_model_path)
+            elif req.embedding_openai_model_url != "" and req.embedding_openai_model_url != "":
+                logger.info(f"load remote embedding model {req.embedding_openai_model_name}")
+                embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
+                logger.info(f"load base embedding model {base_embedding}")
                 embedding_model = base_embedding
             answer_similarity.embeddings = embedding_model
             metrics.append(answer_similarity)

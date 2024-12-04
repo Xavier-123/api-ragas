@@ -1,5 +1,4 @@
 import os
-from tools.embedding import MyEmbedding
 
 # 文件保存路径
 save_path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0] + "/file_save"

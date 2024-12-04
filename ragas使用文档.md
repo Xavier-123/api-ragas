@@ -138,8 +138,8 @@ http://ip:port/ragas/getOmegaRag
 ```json
 {
     "task_id": "98f1a580-d692-4bf5-ae02-9639bbba08fa",                                  # 必填
-    "user_id": "zhangliang012",                                                          # 必填   
-    "file_name": "OmegaRag-一条数据.json",                                          # 必填
+    "user_id": "zhangliang012",                                                         # 必填   
+    "file_name": "OmegaRag-一条数据.json",                                               # 必填
     "rag_url": "https://192.168.12.188:37778/api/v1/chat/completions",                  # 必填
     "rag_authorization2": "Bearer xxxxxxxx",                                            # 必填
     "rag_cookie": "token=xxxxxxxxxxxx",                                                 # 必填
