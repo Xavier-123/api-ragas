@@ -185,7 +185,8 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
                 embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
                 logger.info(f"load base embedding model {base_embedding}")
-                embedding_model = base_embedding
+                # embedding_model = base_embedding
+                embedding_model = LocalEmbedding(base_embedding)
             answer_relevancy.embeddings = embedding_model  # 答案相关性
             metrics.append(answer_relevancy)
         if req.answer_correctness:
@@ -199,7 +200,8 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
                 embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
                 logger.info(f"load base embedding model {base_embedding}")
-                embedding_model = base_embedding
+                # embedding_model = base_embedding
+                embedding_model = LocalEmbedding(base_embedding)
             answer_correctness.embeddings = embedding_model
             metrics.append(answer_correctness)
         if req.answer_similarity:
@@ -213,7 +215,8 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
                 embedding_model = OpenAIEmbedding(req.embedding_openai_model_url, req.embedding_openai_model_name)
             else:
                 logger.info(f"load base embedding model {base_embedding}")
-                embedding_model = base_embedding
+                # embedding_model = base_embedding
+                embedding_model = LocalEmbedding(base_embedding)
             answer_similarity.embeddings = embedding_model
             metrics.append(answer_similarity)
         if req.context_entity_recall:

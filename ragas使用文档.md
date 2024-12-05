@@ -285,4 +285,4 @@ http://ip:port/ragas/query_ragas_evaluate
 
 
 
-在liunx部署是需要添加环境变了 "export OPENAI_API_KEY=None"
+## 在liunx部署是需要添加环境变了 "export OPENAI_API_KEY=None"
