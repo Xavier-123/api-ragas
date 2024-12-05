@@ -85,7 +85,8 @@ async def getOmegaRag(
         task_id = uuid.uuid4()
 
     # 判断task_id是否存在
-    if task_id in omega_task_dict or task_id in ragas_task_dict:
+    if task_id in omega_task_dict:
+    # if task_id in omega_task_dict or task_id in ragas_task_dict:
         content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in omega_task", "res": {}}
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
@@ -124,7 +125,7 @@ async def ragas_evaluate(
     task_id = req.task_id
 
     # 判断task_id是否存在
-    if task_id in omega_task_dict or task_id in ragas_task_dict:
+    if task_id in ragas_task_dict:
         content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in ragas_task", "res": {}}
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
