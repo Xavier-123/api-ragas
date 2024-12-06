@@ -457,7 +457,7 @@ def get_cur_time():
     return timestamp + weekdays[datetime.date.today().weekday()]
 
 
-def get_request_param(question):
+def get_request_param(question, appid):
     payload = {}
     payload["messages"] = [{
         # "dataId": "f1cxNsgkgjJdTjA0LK4YSWY4",
@@ -468,7 +468,8 @@ def get_request_param(question):
     payload["variables"] = {"cTime": get_cur_time()}
     # payload["responseChatItemId"] = "bwtfJeV7qMYJxz5edIiDfDDX"
     payload["responseChatItemId"] = get_nanoid(24)
-    payload["appId"] = "672b2ab5e05b1f7c0c0bdcd0"
+    # payload["appId"] = "672b2ab5e05b1f7c0c0bdcd0"
+    payload["appId"] = appid
     payload["chatId"] = get_nanoid(12)
     # payload["chatId"] = "uHEJytyvwlBE"
     payload["chatSource"] = "online"

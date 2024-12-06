@@ -1,5 +1,8 @@
 import os
 
+# docs_url
+docs_url = os.environ.get("DOCS_URL", "true")
+
 # 文件保存路径
 save_path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0] + "/file_save"
 print("save_path:", save_path)
@@ -14,6 +17,9 @@ omegaRagAuthorization2 = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl9hcHBfaWQiOiIxNj
 omegaRagCookie = "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmYwZDUxMDZjMjhmODYwMWZiMDI5ODIiLCJ0ZWFtSWQiOiI2NmYwYmMwYzZjMjhmODYwMWZiMDI4NDgiLCJ0bWJJZCI6IjY2ZjBkNTEwNmMyOGY4NjAxZmIwMjk4NSIsImV4cCI6MTczMjM0NTc1OSwiaWF0IjoxNzMyMjU5MzU5fQ.92f6zZvQNrXohklv6EwDsG2OYIS1liUwuTV5u6_Nolg"
 
 
+if __name__ == '__main__':
+    s = "False"
+    print(bool(s))
 
 
 

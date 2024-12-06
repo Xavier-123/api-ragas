@@ -4,9 +4,12 @@ from fastapi.responses import JSONResponse
 from server.router import utils_router, ragas_router
 from tools.error_define import CustomError
 from tools.log import logger
+from tools.configs import docs_url
 
-# app = FastAPI(title='ragas api', version='v1.0')
-app = FastAPI(title='ragas api', version='v1.0', docs_url=None)
+if docs_url == "true":
+    app = FastAPI(title='ragas api', version='v1.0')
+else:
+    app = FastAPI(title='ragas api', version='v1.0', docs_url=None)
 app.include_router(utils_router, prefix="/utils")
 app.include_router(ragas_router, prefix="/ragas")
 

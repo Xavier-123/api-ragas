@@ -34,6 +34,11 @@ def getContextsAndAnswerByOmega(
         req.rag_authorization2 = omegaRagAuthorization2
     if req.rag_cookie == "":
         req.rag_cookie = omegaRagCookie
+    if req.rag_appid == "":
+        logger.info("rag_appid is empty.")
+        if isinstance(task_dict, dict):
+            task_dict[task_id] = {"time": time.time(), "code": 1, "msg": f"rag_appid is empty."}
+        return None
 
     header = {
         "Content-Type": "application/json",
@@ -51,7 +56,7 @@ def getContextsAndAnswerByOmega(
             question = data_samples["question"][i]
             while count < 2:
                 try:
-                    data = json.dumps(get_request_param(question))
+                    data = json.dumps(get_request_param(question, req.rag_appid))
                     logger.info(f"\nidx: {i}, question: {question}")
 
                     # if i == 10:

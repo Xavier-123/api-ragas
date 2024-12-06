@@ -39,6 +39,7 @@ class OmegaRequestModel(BaseModel):
     rag_url: str = Field("https://192.168.12.188:37778/api/v1/chat/completions", description="omega rag对话接口")
     rag_authorization2: str = Field("", description="Authorization2")
     rag_cookie: str = Field("", description="cookie")
+    rag_appid: str = Field("", description="omega appid")
 
     # 其他参数
     task_id: str = Field("", description="任务id")
