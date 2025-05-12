@@ -113,6 +113,7 @@ async def getOmegaRag(
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
     except Exception as e:
+        del omega_task_dict[task_id]
         content = {"isSuc": True, "code": -1, "msg": str(e), "res": {}}
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
@@ -153,7 +154,8 @@ async def ragas_evaluate(
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
     except Exception as e:
-        content = {"isSuc": True, "code": 0, "msg": "Success ~", "res": {}}
+        del omega_task_dict[task_id]
+        content = {"isSuc": False, "code": -1, "msg": e, "res": {}}
         return JSONResponse(status_code=status.HTTP_100_CONTINUE, content=content)
 
 
