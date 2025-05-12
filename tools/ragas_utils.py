@@ -42,7 +42,8 @@ def getContextsAndAnswerByOmega(
 
     header = {
         "Content-Type": "application/json",
-        "Authorization2": req.rag_authorization2,
+        # "Authorization2": req.rag_authorization2,
+        "Auth": req.rag_authorization2,
         "cookie": req.rag_cookie
     }
     answer_list, contexts_list = [], []

@@ -128,6 +128,7 @@ async def ragas_evaluate(
     # 判断task_id是否存在
     if task_id in ragas_task_dict:
         content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in ragas_task", "res": {}}
+        logger.info(f">>> task_id {task_id} is exist in ragas_task")
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
 
     data_samples, isComplete, error_info = ragas_load_data(req)
