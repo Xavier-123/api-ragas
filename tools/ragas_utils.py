@@ -32,8 +32,6 @@ def getContextsAndAnswerByOmega(
         req.rag_url = omegaRagUrl
     if req.rag_authorization2 == "":
         req.rag_authorization2 = omegaRagAuthorization2
-    if req.rag_cookie == "":
-        req.rag_cookie = omegaRagCookie
     if req.rag_appid == "":
         logger.info("rag_appid is empty.")
         if isinstance(task_dict, dict):
@@ -42,9 +40,7 @@ def getContextsAndAnswerByOmega(
 
     header = {
         "Content-Type": "application/json",
-        # "Authorization2": req.rag_authorization2,
         "Auth": req.rag_authorization2,
-        "cookie": req.rag_cookie
     }
     answer_list, contexts_list = [], []
 
@@ -163,7 +159,9 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
             model=req.model,
             timeout=None,
             default_headers=None,
-            base_url=req.base_url)
+            api_key=req.api_key,
+            base_url=req.base_url
+        )
 
         run_config = RunConfig()
         my_llm = LangchainLLMWrapper(openai_model, run_config)
@@ -290,6 +288,10 @@ def getRagasEvaluate(req, dataset, task_id, task_dict, logger):
 
 def queryOmegaDict(req, omega_task_dict):
     task_id = req.task_id
+
+    if not os.path.exists(save_path):
+        return "任务不存在", False, -1, ""
+
     if task_id in omega_task_dict:
         omeaga_task_code = omega_task_dict[task_id]["code"]
         match omeaga_task_code:
@@ -346,4 +348,4 @@ def ragas_load_data(req):
 
 if __name__ == '__main__':
     path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
-    print(path)
+    # print(path)

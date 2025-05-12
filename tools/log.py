@@ -47,7 +47,7 @@ class Logger(object):
 curr_path = os.path.split(os.path.abspath(__file__))[0]
 proj_path = (os.path.dirname(curr_path))
 log_path = proj_path + '/logs'
-print("log_path:", log_path)
+# print("log_path:", log_path)
 if not os.path.exists(log_path):
     os.makedirs(log_path)
 logger = Logger(log_path + '/api.tools', level='info').logger

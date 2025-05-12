@@ -36,9 +36,9 @@ class FileRequestModel(BaseModel):
 
 class OmegaRequestModel(BaseModel):
     # omega相关参数
-    rag_url: str = Field("https://192.168.12.188:37778/api/v1/chat/completions", description="omega rag对话接口")
-    rag_authorization2: str = Field("", description="Authorization2")
-    rag_cookie: str = Field("", description="cookie")
+    rag_url: str = Field("https://10.110.63.144:36667/agent-platform/api/v1/chat/completions", description="omega "
+                                                                                                            "rag对话接口")
+    rag_authorization2: str = Field("", description="Auth")
     rag_appid: str = Field("", description="omega appid")
 
     # 其他参数
@@ -51,6 +51,7 @@ class RagasRequestModel(BaseModel):
     # LLm相关参数
     model: str = Field("qwen2-72b-instruct", example="")
     base_url: str = Field("http://120.222.7.146:1025/v1", example="")
+    api_key: str = Field(None, description="API Key")
 
     # embedding相关参数
     embedding_local_model_path: str = Field("",
@@ -128,15 +129,19 @@ async def ragas_evaluate(
 
     # 判断task_id是否存在
     if task_id in ragas_task_dict:
-        content = {"isSuc": False, "code": 0, "msg": f"task_id {task_id} is exist in ragas_task", "res": {}}
+        content = {"isSuc": True, "code": 0, "msg": f"task_id {task_id} is exist in ragas_task", "res": {}}
         logger.info(f">>> task_id {task_id} is exist in ragas_task")
         return JSONResponse(status_code=status.HTTP_200_OK, content=content)
-
-    data_samples, isComplete, error_info = ragas_load_data(req)
-    if not isComplete:
-        content = {"isSuc": True, "code": -1, "msg": str(error_info), "res": {}}
-        return JSONResponse(status_code=200, content=content)
-    dataset = Dataset.from_dict(data_samples)
+    try:
+        data_samples, isComplete, error_info = ragas_load_data(req)
+        if not isComplete:
+            content = {"isSuc": False, "code": -1, "msg": str(error_info), "res": {}}
+            return JSONResponse(status_code=200, content=content)
+        dataset = Dataset.from_dict(data_samples)
+    except Exception as e:
+        del ragas_task_dict[task_id]
+        content = {"isSuc": False, "code": -1, "msg": e, "res": {}}
+        return JSONResponse(status_code=status.HTTP_100_CONTINUE, content=content)
 
     # ragas评估
     try:

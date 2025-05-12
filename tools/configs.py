@@ -5,7 +5,7 @@ docs_url = os.environ.get("DOCS_URL", "true")
 
 # 文件保存路径
 save_path = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0] + "/file_save"
-print("save_path:", save_path)
+# print("save_path:", save_path)
 
 # 基础embedding模型
 # base_embedding = MyEmbedding(os.path.join(os.path.split(os.path.split(os.path.abspath(__file__))[0])[0], "models/m3e-small"))
